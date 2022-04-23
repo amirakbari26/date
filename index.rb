@@ -4,61 +4,46 @@ require 'parsi-date'
 
 #current day information
 
-puts "What kind of calendar would you like? (Jalali or Gregorian)"
+puts "What kind of calendar would you like? (for Jalali enter 1 and for Gregorian enter 2)"
 
-c = gets.chomp
+tc = gets.chomp
 
-if c == "Jalali"
+if tc == "1"
     time = Time.now
     pt = time.to_parsi
     puts pt.strftime("%Y/%m/%d")
 
 end
 
-if c == "Gregorian"
+if tc == "2"
     time = Time.now
     puts time.strftime("%Y/%m/%d")
 
 end
 
 
+
 #all remaining days
 
-puts "please enter start date (e.g 2020,04,12)"
+puts "please enter start date (e.g 2020-04-12)"
 ds = gets.chomp
-a = ds.split(',',3)
+sd = Date.parse(ds)
 
-puts "please enter end date (e.g 2021,04,12)"
+puts "please enter end date (e.g 2021-04-12)"
 de = gets.chomp
-b = de.split(',',3)
+ed = Date.parse(de)
 
 
-def day_counter(b , a)
-    c = Integer Date.new(b.at(0).to_i,b.at(1).to_i,b.at(2).to_i) - Date.new(a.at(0).to_i,a.at(1).to_i,a.at(2).to_i)
-    puts c
+def day_counter(sd , ed)
+    c = sd.upto(ed).select { |date|  date }.count
+    puts "all remaining days; #{c}"
+
 end
 
-day_counter b ,a
+day_counter sd ,ed
 
 
 #remaining work days
 
-count = 0
-
-dsobj = Date.parse ds
-
-deobj = Date.parse de
-
-
-while dsobj <= deobj do
-    nday= dsobj.strftime("%A")
-
-    if nday != "Thursday" && nday != "Friday"
-        count+= 1
-
-    end
-
-    dsobj = dsobj + 1
-
-end
-puts count
+c = sd.upto(ed).select{ |d| d.saturday? || d.sunday? || d.monday? || d.tuesday? || d.wednesday? }.count
+puts "remaining work days : #{c}"
